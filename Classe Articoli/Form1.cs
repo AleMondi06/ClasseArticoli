@@ -153,8 +153,6 @@ namespace Classe_Articoli
         }
 
         // Metodo per generare lo scontrino
-        // Metodo per generare lo scontrino
-        // Metodo per generare lo scontrino
         private void GeneraScontrino()
         {
             float totale = 0;
@@ -198,16 +196,16 @@ namespace Classe_Articoli
             scontrino += "\nARTICOLI ALIMENTARI FRESCHI:\n";
             foreach (var alimentareFresco in alimentariFreschi)
             {
-                scontrino += $"{alimentareFresco.Nome} - Prezzo: {alimentareFresco.Prezzo:C} - Prezzo scontato: {alimentareFresco.Sconta():C} - Data di scadenza: {alimentareFresco.DataScadenza}\n";
+                scontrino += $"{alimentareFresco.Nome} - Prezzo: {alimentareFresco.Prezzo} - Prezzo scontato: {alimentareFresco.Sconta()} - Data di scadenza: {alimentareFresco.DataScadenza}\n";
             }
 
             scontrino += "\nARTICOLI NON ALIMENTARI:\n";
             foreach (var nonAlimentare in nonAlimentari)
             {
-                scontrino += $"{nonAlimentare.Nome} - Prezzo: {nonAlimentare.Prezzo:C} - Prezzo scontato: {nonAlimentare.Sconta():C} - Materiale: {nonAlimentare.Materiale} - Riciclabile: {(nonAlimentare.Riciclabile ? "Si" : "No")}\n";
+                scontrino += $"{nonAlimentare.Nome} - Prezzo: {nonAlimentare.Prezzo} - Prezzo scontato: {nonAlimentare.Sconta()} - Materiale: {nonAlimentare.Materiale} - Riciclabile: {(nonAlimentare.Riciclabile ? "Si" : "No")}\n";
             }
 
-            scontrino += $"\nTOTALE: {totale:C}\nTOTALE SCONTATO: {totaleScontato:C}";
+            scontrino += $"\nTOTALE: {totale}\nTOTALE SCONTATO: {totaleScontato}";
 
             MessageBox.Show(scontrino, "Scontrino");
         }
