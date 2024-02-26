@@ -32,16 +32,15 @@
             this.NON_ALIMENTARI = new System.Windows.Forms.Button();
             this.ALIMENTARI_FRESCHI = new System.Windows.Forms.Button();
             this.SCONTRINO = new System.Windows.Forms.Button();
-            this.Scontrinο = new System.Windows.Forms.ListBox();
             this.EXIT = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ALIMENTARI
             // 
-            this.ALIMENTARI.Location = new System.Drawing.Point(12, 39);
+            this.ALIMENTARI.Location = new System.Drawing.Point(50, 69);
             this.ALIMENTARI.Name = "ALIMENTARI";
-            this.ALIMENTARI.Size = new System.Drawing.Size(125, 43);
+            this.ALIMENTARI.Size = new System.Drawing.Size(181, 102);
             this.ALIMENTARI.TabIndex = 2;
             this.ALIMENTARI.Text = "ALIMENTARI";
             this.ALIMENTARI.UseVisualStyleBackColor = true;
@@ -49,9 +48,9 @@
             // 
             // NON_ALIMENTARI
             // 
-            this.NON_ALIMENTARI.Location = new System.Drawing.Point(12, 88);
+            this.NON_ALIMENTARI.Location = new System.Drawing.Point(296, 69);
             this.NON_ALIMENTARI.Name = "NON_ALIMENTARI";
-            this.NON_ALIMENTARI.Size = new System.Drawing.Size(125, 43);
+            this.NON_ALIMENTARI.Size = new System.Drawing.Size(181, 102);
             this.NON_ALIMENTARI.TabIndex = 3;
             this.NON_ALIMENTARI.Text = "NON ALIMENTARI";
             this.NON_ALIMENTARI.UseVisualStyleBackColor = true;
@@ -59,9 +58,9 @@
             // 
             // ALIMENTARI_FRESCHI
             // 
-            this.ALIMENTARI_FRESCHI.Location = new System.Drawing.Point(12, 137);
+            this.ALIMENTARI_FRESCHI.Location = new System.Drawing.Point(529, 69);
             this.ALIMENTARI_FRESCHI.Name = "ALIMENTARI_FRESCHI";
-            this.ALIMENTARI_FRESCHI.Size = new System.Drawing.Size(125, 43);
+            this.ALIMENTARI_FRESCHI.Size = new System.Drawing.Size(181, 102);
             this.ALIMENTARI_FRESCHI.TabIndex = 4;
             this.ALIMENTARI_FRESCHI.Text = "ALIMENTARI FRESCHI";
             this.ALIMENTARI_FRESCHI.UseVisualStyleBackColor = true;
@@ -69,27 +68,19 @@
             // 
             // SCONTRINO
             // 
-            this.SCONTRINO.Location = new System.Drawing.Point(12, 395);
+            this.SCONTRINO.Location = new System.Drawing.Point(50, 275);
             this.SCONTRINO.Name = "SCONTRINO";
-            this.SCONTRINO.Size = new System.Drawing.Size(125, 43);
+            this.SCONTRINO.Size = new System.Drawing.Size(181, 95);
             this.SCONTRINO.TabIndex = 5;
             this.SCONTRINO.Text = "STAMPA SCONTRINO";
             this.SCONTRINO.UseVisualStyleBackColor = true;
             this.SCONTRINO.Click += new System.EventHandler(this.SCONTRINO_Click_1);
             // 
-            // Scontrinο
-            // 
-            this.Scontrinο.FormattingEnabled = true;
-            this.Scontrinο.Location = new System.Drawing.Point(184, 21);
-            this.Scontrinο.Name = "Scontrinο";
-            this.Scontrinο.Size = new System.Drawing.Size(588, 355);
-            this.Scontrinο.TabIndex = 6;
-            // 
             // EXIT
             // 
-            this.EXIT.Location = new System.Drawing.Point(647, 395);
+            this.EXIT.Location = new System.Drawing.Point(529, 275);
             this.EXIT.Name = "EXIT";
-            this.EXIT.Size = new System.Drawing.Size(125, 43);
+            this.EXIT.Size = new System.Drawing.Size(181, 95);
             this.EXIT.TabIndex = 7;
             this.EXIT.Text = "EXIT";
             this.EXIT.UseVisualStyleBackColor = true;
@@ -98,7 +89,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(47, 23);
+            this.label1.Location = new System.Drawing.Point(355, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 8;
@@ -111,7 +102,6 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.EXIT);
-            this.Controls.Add(this.Scontrinο);
             this.Controls.Add(this.SCONTRINO);
             this.Controls.Add(this.ALIMENTARI_FRESCHI);
             this.Controls.Add(this.NON_ALIMENTARI);
@@ -130,7 +120,6 @@
         private System.Windows.Forms.Button NON_ALIMENTARI;
         private System.Windows.Forms.Button ALIMENTARI_FRESCHI;
         private System.Windows.Forms.Button SCONTRINO;
-        private System.Windows.Forms.ListBox Scontrinο;
         private System.Windows.Forms.Button EXIT;
         private System.Windows.Forms.Label label1;
     }

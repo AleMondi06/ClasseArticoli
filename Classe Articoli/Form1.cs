@@ -13,6 +13,13 @@ namespace Classe_Articoli
 {
     public partial class Form1 : Form
     {
+        private int codice = 0;
+
+        // Liste per memorizzare gli articoli
+        private List<Alimentari> alimentari = new List<Alimentari>();
+        private List<AlimentariFreschi> alimentariFreschi = new List<AlimentariFreschi>();
+        private List<ArticoloNonAlimentare> nonAlimentari = new List<ArticoloNonAlimentare>();
+
         public Form1()
         {
             InitializeComponent();
@@ -22,311 +29,213 @@ namespace Classe_Articoli
         {
         }
 
-        // Dichiarazione delle liste e variabili globali
-        List<Alimentari> alimentari = new List<Alimentari>();
-        List<AlimentariFreschi> alimentariFreschi = new List<AlimentariFreschi>();
-        List<ArticoloNonAlimentare> nonAlimentari = new List<ArticoloNonAlimentare>();
-        int codice = 0;
-
         // Classe base per gli articoli venduti
         class Articolo
-        {            
-            // Costruttori con parametri per inizializzare gli oggetti Articolo
-            public Articolo(string a, string b, int c)
-            {
-                codice = a;
-                nome = b;
-                prezzo = c;
-            }
+        {
+            public string Codice { get; set; }
+            public string Nome { get; set; }
+            public float Prezzo { get; set; }
+            public bool Carta { get; set; }
 
-            protected string codice, nome;
-            protected float prezzo;
-            protected bool carta = false;
-
-            // Proprietà per il codice, il nome, il prezzo e la presenza della carta fedeltà
-            public string Codice
-            {
-                get { return codice; }
-                set { codice = value; }
-            }
-            public string Nome
-            {
-                get { return nome; }
-                set { nome = value; }
-            }
-            public float Prezzo
-            {
-                get { return prezzo; }
-                set { prezzo = value; }
-            }
-            public bool Carta
-            {
-                get { return carta; }
-                set { carta = value; }
-            }
-
-            // Metodo virtuale per calcolare lo sconto sul prezzo dell'articolo
+            // Metodo per calcolare lo sconto sul prezzo dell'articolo
             public virtual float Sconta()
             {
-                return prezzo - ((prezzo / 100) * 5);
+                float sconto = Carta ? Prezzo * 0.05f : 0; // Sconto del 5% se si ha la carta fedeltà
+                return Prezzo - sconto;
             }
         }
 
         // Classe derivata per gli articoli alimentari
         class Alimentari : Articolo
-        {            
-            // Costruttore per gli articoli alimentari
-            public Alimentari(string a, string b, int c, string d) : base(a, b, c)
-            {
-                data_scadenza = d;
-            }
-            protected string data_scadenza; // Data di scadenza dell'articolo alimentare
+        {
+            public string DataScadenza { get; set; }
 
-            // Proprietà per la data di scadenza
-            public string Data_Scadenza
-            {
-                get { return data_scadenza; }
-                set { data_scadenza = value; }
-            }
-            // Metodo per calcolare lo sconto sul prezzo dell'articolo alimentare
+            // Metodo per calcolare lo sconto sugli alimentari
             public override float Sconta()
             {
-                float Prezzo = prezzo;
-                if (int.Parse(data_scadenza) == DateTime.Today.Year)
+                float sconto = base.Sconta(); // Applica lo sconto base
+                if (DateTime.TryParse(DataScadenza, out DateTime scadenza) && scadenza.Year == DateTime.Today.Year)
                 {
-                    Prezzo = prezzo - ((prezzo / 100) * 20);
+                    sconto -= Prezzo * 0.2f; // Sconto aggiuntivo del 20% se l'anno di scadenza coincide con quello attuale
                 }
-                if (carta == true)
-                {
-                    Prezzo = Prezzo - ((Prezzo / 100) * 5);
-                }
-                return Prezzo;
+                return sconto;
             }
-
-            // Metodo per stampare le informazioni sull'articolo alimentare
-            public string Stampa()
-            {
-                return $"Scontrino:\nCodice: {codice}\nNome: {nome}\nPrezzo: {prezzo:C}\nPrezzo scontato: {Sconta():C}\nData di scadenza: {data_scadenza}";
-            }
-
         }
 
         // Classe derivata per gli articoli non alimentari
         class ArticoloNonAlimentare : Articolo
         {
-            private string materiale; // Materiale di cui è composto l'articolo non alimentare
-            private bool riciclabile; // Indica se l'articolo è riciclabile o meno
+            public string Materiale { get; set; }
+            public bool Riciclabile { get; set; }
 
-            // Proprietà per il materiale e la riciclabilità dell'articolo non alimentare
-            public string Materiale
-            {
-                get { return materiale; }
-                set { materiale = value; }
-            }
-            public bool Riciclabile
-            {
-                get { return riciclabile; }
-                set { riciclabile = value; }
-            }
-
-            // Costruttore per gli articoli non alimentari
-            public ArticoloNonAlimentare(string a, string b, int c, bool d, string e) : base(a, b, c)
-            {
-                materiale = e;
-                riciclabile = d;
-            }
-
-            // Metodo per calcolare lo sconto sul prezzo dell'articolo non alimentare
+            // Metodo per calcolare lo sconto sugli articoli non alimentari
             public override float Sconta()
             {
-                // 20% di sconto se l'articolo è riciclabile
-                int riciclab = 1;
-                if (riciclabile == true)
+                float sconto = base.Sconta(); // Applica lo sconto base
+                if (Riciclabile)
                 {
-                    riciclab = 10;
+                    sconto -= Prezzo * 0.1f; // Sconto aggiuntivo del 10% se l'articolo è riciclabile
                 }
-                float Prezzo = prezzo - ((prezzo / 100) * riciclab);
-                if (carta == true)
-                {
-                    Prezzo = Prezzo - ((Prezzo / 100) * 5);
-                }
-                return Prezzo;
+                return sconto;
             }
-
-            // Metodo per stampare le informazioni sull'articolo non alimentare
-            public string Stampa()
-            {
-                string ricic = (riciclabile) ? "SI" : "NO";
-                return $"Scontrino:\nCodice: {codice}\nNome: {nome}\nPrezzo: {prezzo:C}\nPrezzo scontato: {Sconta():C}\nMateriale: {materiale}\nRiciclabile: {ricic}";
-            }
-
         }
 
         // Classe derivata per gli articoli alimentari freschi
         class AlimentariFreschi : Alimentari
         {
-            private int scadenza; // Scadenza massima dell'articolo alimentare fresco
+            public int Scadenza { get; set; }
 
-            // Proprietà per la scadenza massima dell'articolo alimentare fresco
-            public int Scadenza
-            {
-                get { return scadenza; }
-                set { scadenza = value; }
-            }
-
-            // Costruttore per gli articoli alimentari freschi
-            public AlimentariFreschi(string a, string b, int c, string d, int e) : base(a, b, c, d)
-            {
-                scadenza = e;
-            }
-
-            // Metodo per calcolare lo sconto sul prezzo dell'articolo alimentare fresco
+            // Metodo per calcolare lo sconto sugli alimentari freschi
             public override float Sconta()
             {
-                int Fresco = 0;
-                for (int i = 0; i < scadenza; i++)
-                {
-                    Fresco += 2;
-                }
-                float Prezzo = prezzo - ((prezzo / 100) * Fresco);
-                if (int.Parse(data_scadenza) == DateTime.Today.Year)
-                {
-                    Prezzo = prezzo - ((prezzo / 100) * 20);
-                }
-                if (carta == true)
-                {
-                    Prezzo = Prezzo - ((Prezzo / 100) * 5);
-                }
-                return Prezzo;
+                float sconto = base.Sconta(); // Applica lo sconto base
+                sconto -= Prezzo * (Scadenza * 0.02f); // Sconto aggiuntivo in base alla scadenza
+                return sconto;
             }
         }
+
+        // Metodo per aggiungere un articolo alimentare
+        private void AggiungiAlimentare()
+        {
+            string nome = Interaction.InputBox("Nome prodotto", "Input prodotto", "");
+            string prezzo = Interaction.InputBox("Prezzo prodotto", "Input prodotto", "");
+            string dataScadenza = Interaction.InputBox("Data di scadenza prodotto", "Input prodotto", "");
+
+            var alimentare = new Alimentari
+            {
+                Codice = codice.ToString(),
+                Nome = nome,
+                Prezzo = float.Parse(prezzo),
+                DataScadenza = dataScadenza
+            };
+            alimentari.Add(alimentare);
+            codice++;
+        }
+
+        // Metodo per aggiungere un articolo non alimentare
+        private void AggiungiNonAlimentare()
+        {
+            string nome = Interaction.InputBox("Nome prodotto", "Input prodotto", "");
+            string prezzo = Interaction.InputBox("Prezzo prodotto", "Input prodotto", "");
+            string materiale = Interaction.InputBox("Materiale del prodotto", "Input prodotto", "");
+            bool riciclabile = MessageBox.Show("È riciclabile?", "Riciclabile", MessageBoxButtons.YesNo) == DialogResult.Yes;
+
+            var nonAlimentare = new ArticoloNonAlimentare
+            {
+                Codice = codice.ToString(),
+                Nome = nome,
+                Prezzo = float.Parse(prezzo),
+                Materiale = materiale,
+                Riciclabile = riciclabile
+            };
+            nonAlimentari.Add(nonAlimentare);
+            codice++;
+        }
+
+        // Metodo per aggiungere un articolo alimentare fresco
+        private void AggiungiAlimentareFresco()
+        {
+            string nome = Interaction.InputBox("Nome prodotto", "Input prodotto", "");
+            string prezzo = Interaction.InputBox("Prezzo prodotto", "Input prodotto", "");
+            string dataScadenza = Interaction.InputBox("Data di scadenza prodotto", "Input prodotto", "");
+            string scadenza = Interaction.InputBox("Scadenza massima prodotto", "Input prodotto", "");
+
+            var alimentareFresco = new AlimentariFreschi
+            {
+                Codice = codice.ToString(),
+                Nome = nome,
+                Prezzo = float.Parse(prezzo),
+                DataScadenza = dataScadenza,
+                Scadenza = int.Parse(scadenza)
+            };
+            alimentariFreschi.Add(alimentareFresco);
+            codice++;
+        }
+
+        // Metodo per generare lo scontrino
+        // Metodo per generare lo scontrino
+        // Metodo per generare lo scontrino
+        private void GeneraScontrino()
+        {
+            float totale = 0;
+            float totaleScontato = 0;
+
+            DialogResult result = MessageBox.Show("Possiedi la carta fedeltà?", "Carta fedeltà", MessageBoxButtons.YesNo);
+            bool cartaFedelta = result == DialogResult.Yes;
+
+            // Calcola il totale e il totale scontato per gli alimentari
+            foreach (var alimentare in alimentari)
+            {
+                alimentare.Carta = cartaFedelta;
+                totale += alimentare.Prezzo;
+                totaleScontato += alimentare.Sconta();
+            }
+
+            // Calcola il totale e il totale scontato per gli alimentari freschi
+            foreach (var alimentareFresco in alimentariFreschi)
+            {
+                alimentareFresco.Carta = cartaFedelta;
+                totale += alimentareFresco.Prezzo;
+                totaleScontato += alimentareFresco.Sconta();
+            }
+
+            // Calcola il totale e il totale scontato per gli articoli non alimentari
+            foreach (var nonAlimentare in nonAlimentari)
+            {
+                nonAlimentare.Carta = cartaFedelta;
+                totale += nonAlimentare.Prezzo;
+                totaleScontato += nonAlimentare.Sconta();
+            }
+
+            // Visualizza lo scontrino
+            string scontrino = "Scontrino:\n";
+            scontrino += "ARTICOLI ALIMENTARI:\n";
+            foreach (var alimentare in alimentari)
+            {
+                scontrino += $"{alimentare.Nome} - Prezzo: {alimentare.Prezzo:C} - Prezzo scontato: {alimentare.Sconta():C} - Data di scadenza: {alimentare.DataScadenza}\n";
+            }
+
+            scontrino += "\nARTICOLI ALIMENTARI FRESCHI:\n";
+            foreach (var alimentareFresco in alimentariFreschi)
+            {
+                scontrino += $"{alimentareFresco.Nome} - Prezzo: {alimentareFresco.Prezzo:C} - Prezzo scontato: {alimentareFresco.Sconta():C} - Data di scadenza: {alimentareFresco.DataScadenza}\n";
+            }
+
+            scontrino += "\nARTICOLI NON ALIMENTARI:\n";
+            foreach (var nonAlimentare in nonAlimentari)
+            {
+                scontrino += $"{nonAlimentare.Nome} - Prezzo: {nonAlimentare.Prezzo:C} - Prezzo scontato: {nonAlimentare.Sconta():C} - Materiale: {nonAlimentare.Materiale} - Riciclabile: {(nonAlimentare.Riciclabile ? "Si" : "No")}\n";
+            }
+
+            scontrino += $"\nTOTALE: {totale:C}\nTOTALE SCONTATO: {totaleScontato:C}";
+
+            MessageBox.Show(scontrino, "Scontrino");
+        }
+
+
 
         // Gestione del click sul pulsante per aggiungere articoli alimentari
         private void ALIMENTARI_Click_1(object sender, EventArgs e)
         {
-            // Visualizzazione di messaggi per l'inserimento dei dati dell'articolo
-            string message, title, defaultValue;
-            message = "nome prodotto";
-            title = "Input prodotto";
-            defaultValue = "";
-            string nome = Interaction.InputBox(message, title, defaultValue);
-            message = "prezzo prodotto";
-            string prezzo = Interaction.InputBox(message, title, defaultValue);
-            message = "data di scadenza prodotto";
-            string data = Interaction.InputBox(message, title, defaultValue);
-
-            // Creazione di un nuovo oggetto Alimentari e aggiunta alla lista degli alimentari
-            Alimentari alimentare = new Alimentari(codice.ToString(), nome, int.Parse(prezzo), data);
-            alimentari.Add(alimentare);
-            codice++;
+            AggiungiAlimentare();
         }
 
         // Gestione del click sul pulsante per aggiungere articoli non alimentari
         private void NON_ALIMENTARI_Click_1(object sender, EventArgs e)
         {
-            // Visualizzazione di messaggi per l'inserimento dei dati dell'articolo
-            string message, title, defaultValue;
-            message = "nome prodotto";
-            title = "Input prodotto";
-            defaultValue = "";
-            string nome = Interaction.InputBox(message, title, defaultValue);
-            message = "prezzo prodotto";
-            string prezzo = Interaction.InputBox(message, title, defaultValue);
-            message = "materiale del prodotto";
-            string materiale = Interaction.InputBox(message, title, defaultValue);
-
-            // Messaggio di conferma per la riciclabilità dell'articolo
-            DialogResult dialogResult = MessageBox.Show("è riciclabile?", "Riciclabile", MessageBoxButtons.YesNo);
-            bool a = false;
-            if (dialogResult == DialogResult.Yes)
-            {
-                a = true;
-            }
-
-            // Creazione di un nuovo oggetto ArticoloNonAlimentare e aggiunta alla lista degli articoli non alimentari
-            ArticoloNonAlimentare alimentare = new ArticoloNonAlimentare(codice.ToString(), nome, int.Parse(prezzo), a, materiale);
-            nonAlimentari.Add(alimentare);
-            codice++;
+            AggiungiNonAlimentare();
         }
 
         // Gestione del click sul pulsante per aggiungere articoli alimentari freschi
         private void ALIMENTARI_FRESCHI_Click_1(object sender, EventArgs e)
         {
-            // Visualizzazione di messaggi per l'inserimento dei dati dell'articolo
-            string message, title, defaultValue;
-            message = "nome prodotto";
-            title = "Input prodotto";
-            defaultValue = "";
-            string nome = Interaction.InputBox(message, title, defaultValue);
-            message = "prezzo prodotto";
-            string prezzo = Interaction.InputBox(message, title, defaultValue);
-            message = "data di scadenza prodotto";
-            string data = Interaction.InputBox(message, title, defaultValue);
-            message = "scadenza massima prodotto";
-            string scad = Interaction.InputBox(message, title, defaultValue);
-
-            // Creazione di un nuovo oggetto AlimentariFreschi e aggiunta alla lista degli alimentari freschi
-            AlimentariFreschi alimentare = new AlimentariFreschi(codice.ToString(), nome, int.Parse(prezzo), data, int.Parse(scad));
-            alimentariFreschi.Add(alimentare);
-            codice++;
+            AggiungiAlimentareFresco();
         }
 
         // Gestione del click sul pulsante per generare lo scontrino
         private void SCONTRINO_Click_1(object sender, EventArgs e)
         {
-            float totale = 0; // Variabile per calcolare il totale degli articoli
-            float totaleScontato = 0; // Variabile per calcolare il totale scontato degli articoli
-
-            DialogResult dialogResult = MessageBox.Show("possiedi la carta fedeltá?", "carta fedeltá", MessageBoxButtons.YesNo);
-
-            // Se l'utente possiede la carta fedeltà, applica lo sconto a tutti gli articoli
-            if (dialogResult == DialogResult.Yes)
-            {
-                foreach (Alimentari alimentari in alimentari)
-                {
-                    alimentari.Carta = true;
-                }
-                foreach (ArticoloNonAlimentare alimentari in nonAlimentari)
-                {
-                    alimentari.Carta = true;
-                }
-                foreach (AlimentariFreschi alimentari in alimentariFreschi)
-                {
-                    alimentari.Carta = true;
-                }
-            }
-
-            // Aggiunta degli articoli alimentari allo scontrino
-            Scontrinο.Items.Add("ARTICOLI ALIMENTARI:");
-            foreach (Alimentari alimentari in alimentari)
-            {
-                Scontrinο.Items.Add(alimentari.Stampa());
-                totale += alimentari.Prezzo;
-                totaleScontato += alimentari.Sconta();
-            }
-
-            // Aggiunta degli articoli non alimentari allo scontrino
-            Scontrinο.Items.Add("ARTICOLI NON ALIMENTARI:");
-            foreach (ArticoloNonAlimentare alimentari in nonAlimentari)
-            {
-                Scontrinο.Items.Add(alimentari.Stampa());
-                totale += alimentari.Prezzo;
-                totaleScontato += alimentari.Sconta();
-            }
-
-            // Aggiunta degli articoli alimentari freschi allo scontrino
-            Scontrinο.Items.Add("ARTICOLI ALIMENTARI FRESCHI:");
-            foreach (AlimentariFreschi alimentari in alimentariFreschi)
-            {
-                Scontrinο.Items.Add(alimentari.Stampa());
-                totale += alimentari.Prezzo;
-                totaleScontato += alimentari.Sconta();
-            }
-
-            // Aggiunta del totale e del totale scontato allo scontrino
-            Scontrinο.Items.Add(" ");
-            Scontrinο.Items.Add("tot: " + totale);
-            Scontrinο.Items.Add("tot scontato: " + totaleScontato);
+            GeneraScontrino();
         }
 
         private void EXIT_Click(object sender, EventArgs e)
